@@ -1,0 +1,26 @@
+{% extends 'el_webI/base.html' %}
+{% load static %}
+
+{% block content %}
+<br><br><br>
+<center>
+    <img id="myImage" onclick="changeImage()" src="{% static 'images/pic_bulboff.gif' %}" / >
+</center>
+
+<br><br>
+<center><h4><i class="glyphicon glyphicon-time"></i>&nbsp;&nbsp;&nbsp;00 : 07 : 45</h4></center>
+<br><br>
+<b><i class="w3-xlarge material-icons">timer</i></b>
+
+<script>
+    function changeImage() {
+        var image = document.getElementById('myImage');
+        if (image.src.match("bulbon")) {
+        image.src = "{% static 'images/pic_bulboff.gif' %}";
+        } else {
+        image.src = "{% static 'images/pic_bulbon.gif' %}";
+        }
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,119 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<title>E-live</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/progressbar.css' %}">
+
+<style>
+
+.glow {
+  font-size: 80px;
+  color: rgb(0, 0, 0);
+  text-align: center;
+  -webkit-animation: glow 1.5s ease-in-out infinite alternate;
+  -moz-animation: glow 1.5s ease-in-out infinite alternate;
+  animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 3px #fff, 0 0 4px #fff, 0 0 5px #fff, 0 0 6px #fff, 0 0 7px #fff;
+  }
+  
+  to {
+    text-shadow: 0 0 2px #fff, 0 0 3px red, 0 0 4px red, 0 0 5px red, 0 0 6px red, 0 0 7px red, 0 0 8px red;
+  }
+}
+body,h1,h2,h3,h4,h5 {font-family: "Poppins", sans-serif}
+body {font-size:16px;}
+.w3-half img{margin-bottom:-6px;margin-top:16px;opacity:0.8;cursor:pointer}
+.w3-half img:hover{opacity:1}
+</style>
+<body>
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-black w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:300px;font-weight:bold;" id="mySidebar"><br>
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px">eXit</a>
+  <div class="w3-container">
+    <h2 class="w3-padding-64" style="font-family: Courier New, Times, serif;"><b>E-live </b></h2>
+  </div>
+  <div class="w3-bar-block">
+    <a href="/history" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">
+      <span class="fa fa-history"></span> &nbsp; &nbsp; History</a> 
+    <a href="/notification" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">
+      <span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;&nbsp;&nbsp;&nbsp; Notification</a> 
+    <a href="/billpayment" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">
+      <i class="fa fa-cc-paypal"></i>&nbsp;&nbsp;&nbsp; Bill Payment</a>
+      <a href="/component" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">
+          <span class="glyphicon glyphicon-th"></span>&nbsp;&nbsp;&nbsp;&nbsp; Component demo</a> 
+    <a href="/settings" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">
+      <span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;&nbsp;&nbsp; Settings </a> 
+
+    <a href="/logout" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">
+      <span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;&nbsp;&nbsp; Log Out</a> 
+   
+  </div>
+</nav>
+
+<!-- Top menu on small screens -->
+<header class="w3-container w3-top w3-hide-large w3-black w3-xlarge w3-padding">
+  <a href="javascript:void(0)" class="w3-button w3-black w3-margin-right" onclick="w3_open()">☰</a>
+  <span style="font-family: Courier New, Times, serif;">E-live</span>
+</header>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<div class="w3-container" style="margin-top:80px" id="showcase">
+  </div>
+
+  <div class="w3-main" style="margin-left:340px;margin-right:40px"> 
+<div class='container'>
+{% block content %}
+
+{% endblock %}
+</div>
+</div>
+<script>
+// Script to open and close sidebar
+function w3_open() {
+  document.getElementById("mySidebar").style.display = "block";
+  document.getElementById("myOverlay").style.display = "block";
+}
+ 
+function w3_close() {
+  document.getElementById("mySidebar").style.display = "none";
+  document.getElementById("myOverlay").style.display = "none";
+}
+
+// Modal Image Gallery
+function onClick(element) {
+  document.getElementById("img01").src = element.src;
+  document.getElementById("modal01").style.display = "block";
+  var captionText = document.getElementById("caption");
+  captionText.innerHTML = element.alt;
+}
+</script>
+
+
+</body>
+</html>
+
