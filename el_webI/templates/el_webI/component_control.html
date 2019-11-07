@@ -11,7 +11,10 @@
 <center><h4><i class="glyphicon glyphicon-time"></i>&nbsp;&nbsp;&nbsp;00 : 07 : 45</h4></center>
 <br><br>
 <b><i class="w3-xlarge material-icons">timer</i></b>
-
+<button onclick="requestJson()">JSON test</button>
+<a id="test_requestJson">initial data</a>
+<br>
+<a id="demo">haha</a>
 <script>
     function changeImage() {
         var image = document.getElementById('myImage');
@@ -20,6 +23,13 @@
         } else {
         image.src = "{% static 'images/pic_bulbon.gif' %}";
         }
+    }
+</script>
+<script type='text/javascript'>
+    function requestJson(){
+        //document.getElementById("test_requestJson").innerHTML = "changed data";
+        var str = {{ data_from_server|safe }};
+        document.getElementById("demo").innerHTML = str;
     }
 </script>
 
