@@ -17,7 +17,8 @@ class Component_status(models.Model):
     last_update_time = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return self.cid
+        string = str(self.cid)
+        return string
 
 class home(models.Model):
     total_energy_consumed = models.IntegerField()

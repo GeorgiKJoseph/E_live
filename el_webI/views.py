@@ -8,20 +8,28 @@ from rest_framework import status
 import serial
 from .models import Component_status, Component_data, home, history
 from .serializers import Component_status_Serializer
-
-#ser = serial.Serial('/dev/ttyACM0',9800,timeout=1)
+from .forms import ComponentStatusForm
+try:
+    ser = serial.Serial('/dev/ttyACM0',9800,timeout=1)
+except :
+    print ('Connection failed!')
 # Create your views here.
 def home(request):
     return render(request,'el_webI/home.html',{})
 
-def switch_on(request,pk):
-    #ser.write(b'H')
-    status_data = get_object_or_404(Component_status, pk=pk)
-    
+def switch_on(request):
+    try:
+        ser.write(b'H')
+    except:
+        print ('Connection failed!')
+    #status_data = get_object_or_404(Component_status, pk=pk)
     return render(request,'el_webI/switch_on.html',{})
 
 def switch_off(request):
-    #ser.write(b'L')
+    try:
+        ser.write(b'L')
+    except:
+        print ('Connection failed!')
     return render(request,'el_webI/switch_off.html',{})
 
 def component_control(request):
@@ -36,5 +44,21 @@ class component_status_list(APIView):
         serializer = Component_status_Serializer(status, many=True)
         return Response(serializer.data)
     
-    def post(self):
-        pass
+    def put(self,request):
+        comp = get_object_or_404(Component_status,pk=1)
+        serializer = Component_status_Serializer(instance=comp,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+def status_shifter(request):
+    comp_1 = get_object_or_404(Component_status,pk=1)
+    sta = ComponentStatusForm(instance=comp_1)
+    comp_1=sta.save(commit=False)
+    if comp_1.status == False:
+        comp_1.status = True
+    else:
+        comp_1.status = False
+    comp_1.save()
+    return Response()

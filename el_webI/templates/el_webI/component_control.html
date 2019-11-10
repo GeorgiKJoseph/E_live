@@ -4,14 +4,14 @@
 {% block content %}
 <br><br><br>
 <center>
-    <img id="myImage" onclick="changeImage()" src="{% static 'images/pic_bulboff.gif' %}" / >
+<img id="myImage" onclick="changeImage()" src="{% static 'images/pic_bulboff.gif' %}" / >{% csrf_token %}
 </center>
 
 <br><br>
 <center><h4><i class="glyphicon glyphicon-time"></i>&nbsp;&nbsp;&nbsp;00 : 07 : 45</h4></center>
 <br><br>
 <b><i class="w3-xlarge material-icons">timer</i></b>
-<button onclick="requestJson()">JSON test</button>
+<button id="haha" type="submit">JSON test</button>
 <a id="test_requestJson">initial data</a>
 <br>
 <a id="demo">haha</a>
@@ -23,14 +23,83 @@
         } else {
         image.src = "{% static 'images/pic_bulbon.gif' %}";
         }
+        change_status();
     }
 </script>
-<script type='text/javascript'>
-    function requestJson(){
-        //document.getElementById("test_requestJson").innerHTML = "changed data";
-        var str = {{ data_from_server|safe }};
-        document.getElementById("demo").innerHTML = str;
+  <script>
+    function light_on() {
+      var image = document.getElementById('myImage');
+      image.src = "{% static 'images/pic_bulbon.gif' %}";
     }
-</script>
+    function light_off() {
+      var image = document.getElementById('myImage');
+      image.src = "{% static 'images/pic_bulboff.gif' %}";
+    }
+  </script>
+  <script type='text/javascript'>
+    window.onload = function start() {
+      check_status();
+    }
+    function change_status(){
+        var request = new XMLHttpRequest();
+        var request_link = 'http://';
+        request_link= request_link.concat(window.location.host);
+        request_link = request_link.concat('/shift_status/');
+        request.open('GET',request_link,true);
+        request.send;
+    }
 
+    function check_status(){
+      window.setInterval(function () {
+        var request = new XMLHttpRequest();
+        var request_link = 'http://';
+        request_link= request_link.concat(window.location.host);
+        request_link = request_link.concat('/status/');
+        request.open('GET',request_link,true);
+        request.onload = function() {
+            var data = JSON.parse(this.response);
+            if (request.status >= 200 && request.status < 400) {
+                data.forEach(sta => {
+                    console.log(sta.cid);
+                    //document.getElementById("test_requestJson").innerHTML = sta.status;
+                    if (sta.status == true){
+                      light_on();
+                    }
+                    else if(sta.status == false){
+                      light_off();
+                    }
+                })
+            } else {
+                console.log("error");
+            }
+        }
+        request.send()
+      },1000);
+    } 
+  </script>
+<!--
+  <script type="text/javascript">
+  $(document).ready(function() {
+      $("haha").click( function(e){
+        e.preventDefault();
+        var urll = 'http://';
+        urll= urll.concat(window.location.host);
+        urll = urll.concat('/status/');
+        var dataa = {
+            cid: 1,
+            status: false, 
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+        }
+        $.ajax({
+            type: 'PUT',
+            url: 'http://localhost:8000/status/',
+            data: dataa,
+            success: function(){
+                console.log("done");
+            },
+        });
+      });
+  });
+  </script>
+-->
 {% endblock %}
