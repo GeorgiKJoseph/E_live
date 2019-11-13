@@ -9,10 +9,10 @@ urlpatterns = [
     path('on/', views.switch_on, name='switch_on'),
     path('off/',views.switch_off,name='switch_off'),
     path('component/',views.component_control,name='component_control'),
-    path('shift_status/',views.status_shifter,name='status_shifter'),
 
     #path('respjson/',views.respjson,name='respjson'),
     url(r'^status/', views.component_status_list.as_view()),
+    url(r'^statusshifter/', views.status_shifter.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -7,10 +7,10 @@ from rest_framework import status
 
 import serial
 from .models import Component_status, Component_data, home, history
-from .serializers import Component_status_Serializer
+from .serializers import Component_status_Serializer, Status_shifter_Serializer
 from .forms import ComponentStatusForm
 try:
-    ser = serial.Serial('/dev/ttyACM0',9800,timeout=1)
+    ser = serial.Serial('/dev/ttyACM0',9600,timeout=1)
 except :
     print ('Connection failed!')
 # Create your views here.
@@ -19,6 +19,11 @@ def home(request):
 
 def switch_on(request):
     try:
+        comp_1 = get_object_or_404(Component_status,pk=1)
+        sta = ComponentStatusForm(instance=comp_1)
+        comp_1=sta.save(commit=False)
+        comp_1.status = False
+        comp_1.save()
         ser.write(b'H')
     except:
         print ('Connection failed!')
@@ -27,6 +32,11 @@ def switch_on(request):
 
 def switch_off(request):
     try:
+        comp_1 = get_object_or_404(Component_status,pk=1)
+        sta = ComponentStatusForm(instance=comp_1)
+        comp_1=sta.save(commit=False)
+        comp_1.status = True
+        comp_1.save()
         ser.write(b'L')
     except:
         print ('Connection failed!')
@@ -52,13 +62,29 @@ class component_status_list(APIView):
             return Response(serializer.data)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-def status_shifter(request):
-    comp_1 = get_object_or_404(Component_status,pk=1)
-    sta = ComponentStatusForm(instance=comp_1)
-    comp_1=sta.save(commit=False)
-    if comp_1.status == False:
-        comp_1.status = True
-    else:
-        comp_1.status = False
-    comp_1.save()
-    return Response()
+class status_shifter(APIView):
+    def get(self,request):
+        status = Component_status.objects.all()
+        serializer = Status_shifter_Serializer(status, many=True)
+        comp_1 = get_object_or_404(Component_status,pk=1)
+        sta = ComponentStatusForm(instance=comp_1)
+        if comp_1.status == True:
+            try:
+                comp_1=sta.save(commit=False)
+                comp_1.status = False
+                comp_1.save()
+                ser.write(b'H')
+            except:
+                print ('Connection failed!')
+        elif comp_1.status == False:
+            try:
+                comp_1=sta.save(commit=False)
+                comp_1.status = True
+                comp_1.save()
+                ser.write(b'L')
+            except:
+                print ('Connection failed!')                   
+
+        return Response(serializer.data)
+    def put(self,request):
+        pass

@@ -14,6 +14,7 @@ class Component_data(models.Model):
 class Component_status(models.Model):
     cid = models.ForeignKey(Component_data,on_delete=models.CASCADE)
     status = models.BooleanField(default=False)
+    current = models.FloatField(default=0.0)
     last_update_time = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

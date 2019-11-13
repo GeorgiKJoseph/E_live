@@ -5,5 +5,11 @@ class Component_status_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = Component_status
-        fields = ('cid','status')
+        fields = ('cid','status','current')
+
+class Status_shifter_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Component_status
+        fields = ( )
 

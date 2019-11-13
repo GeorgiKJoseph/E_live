@@ -9,12 +9,32 @@
 
 <br><br>
 <center><h4><i class="glyphicon glyphicon-time"></i>&nbsp;&nbsp;&nbsp;00 : 07 : 45</h4></center>
-<br><br>
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-6">
+      <center><h3 id="current">0.00 A</h3></center>
+    </div>
+    <div class="col-xs-6">
+      <center><h3 id="inst_watt">0.00 W</h3></center>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <center><h3 id="consumer_energy">0.00 kWh</h3></center>
+    </div>
+    <div class="col-xs-6">
+      <center><h3 id="max_watt">0.00 W</h3></center>
+    </div>
+  </div>  
+</div>
+
+<!--
 <b><i class="w3-xlarge material-icons">timer</i></b>
 <button id="haha" type="submit">JSON test</button>
 <a id="test_requestJson">initial data</a>
 <br>
-<a id="demo">haha</a>
+-->
 <script>
     function changeImage() {
         var image = document.getElementById('myImage');
@@ -23,7 +43,23 @@
         } else {
         image.src = "{% static 'images/pic_bulbon.gif' %}";
         }
-        change_status();
+        var request = new XMLHttpRequest();
+        var request_link = 'http://';
+        request_link= request_link.concat(window.location.host);
+        request_link = request_link.concat('/statusshifter/');
+        request.open('GET',request_link,true);
+        request.onload = function() {
+            var data = JSON.parse(this.response);
+            if (request.status >= 200 && request.status < 400) {
+                data.forEach(sta => {
+                    console.log(sta.cid);
+                })
+            } else {
+                console.log("error");
+            }
+        }
+        request.send()
+        //change_status();
     }
 </script>
   <script>
@@ -53,6 +89,7 @@
       window.setInterval(function () {
         var request = new XMLHttpRequest();
         var request_link = 'http://';
+        var watt = 0.0;
         request_link= request_link.concat(window.location.host);
         request_link = request_link.concat('/status/');
         request.open('GET',request_link,true);
@@ -61,12 +98,19 @@
             if (request.status >= 200 && request.status < 400) {
                 data.forEach(sta => {
                     console.log(sta.cid);
-                    //document.getElementById("test_requestJson").innerHTML = sta.status;
+
                     if (sta.status == true){
                       light_on();
+                      document.getElementById("current").innerHTML = sta.current + " A";
+                      watt = sta.current*220;
+                      document.getElementById("inst_watt").innerHTML = watt.toFixed(2) + " W";
                     }
                     else if(sta.status == false){
                       light_off();
+                      document.getElementById("current").innerHTML = "0.00 A";
+                      document.getElementById("inst_watt").innerHTML = "0.00 W";
+                      document.getElementById("consumed_energy").innerHTML = "0.00 kWh";
+                      document.getElementById("max_watt").innerHTML = "0.00 A";
                     }
                 })
             } else {
