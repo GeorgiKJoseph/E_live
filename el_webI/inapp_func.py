@@ -1,5 +1,6 @@
 from datetime import datetime
 
+# by Govind J Nair
 def billcalc(instpow):
     currentDay = datetime.now().day
     currentMonth = datetime.now().month
