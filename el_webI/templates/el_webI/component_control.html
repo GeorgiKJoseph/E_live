@@ -8,7 +8,7 @@
 </center>
 
 <br><br>
-<center><h4><i class="glyphicon glyphicon-time"></i>&nbsp;&nbsp;&nbsp;00 : 07 : 45</h4></center>
+<center><h4><i class="glyphicon glyphicon-time"></i>&nbsp;&nbsp;&nbsp;<span id="time">00 : 07 : 45</span></h4></center>
 <br>
 <div class="container">
   <div class="row">
@@ -39,8 +39,10 @@
     function changeImage() {
         var image = document.getElementById('myImage');
         if (image.src.match("bulbon")) {
+        reset();
         image.src = "{% static 'images/pic_bulboff.gif' %}";
         } else {
+        start();
         image.src = "{% static 'images/pic_bulbon.gif' %}";
         }
         var request = new XMLHttpRequest();
@@ -64,6 +66,7 @@
 </script>
   <script>
     function light_on() {
+      
       var image = document.getElementById('myImage');
       image.src = "{% static 'images/pic_bulbon.gif' %}";
     }
@@ -96,17 +99,19 @@
         request.onload = function() {
             var data = JSON.parse(this.response);
             if (request.status >= 200 && request.status < 400) {
-                data.forEach(sta => {
+                data.forEach(sta => { 
                     console.log(sta.cid);
 
                     if (sta.status == true){
                       light_on();
+                      start();
                       document.getElementById("current").innerHTML = sta.current + " A";
                       watt = sta.current*220;
                       document.getElementById("inst_watt").innerHTML = watt.toFixed(2) + " W";
                     }
                     else if(sta.status == false){
                       light_off();
+                      reset();
                       document.getElementById("current").innerHTML = "0.00 A";
                       document.getElementById("inst_watt").innerHTML = "0.00 W";
                       document.getElementById("consumed_energy").innerHTML = "0.00 kWh";
@@ -121,6 +126,93 @@
       },1000);
     } 
   </script>
+  <script>
+      var	clsStopwatch = function() {
+          // Private vars
+          var	startAt	= 0;	// Time of last start / resume. (0 if not running)
+          var	lapTime	= 0;	// Time on the clock when last stopped in milliseconds
+      
+          var	now	= function() {
+              return (new Date()).getTime();
+            };
+      
+          // Public methods
+          // Start or resume
+          this.start = function() {
+              startAt	= startAt ? startAt : now();
+            };
+      
+          // Stop or pause
+          this.stop = function() {
+              // If running, update elapsed time otherwise keep it
+              lapTime	= startAt ? lapTime + now() - startAt : lapTime;
+              startAt	= 0; // Paused
+            };
+      
+          // Reset
+          this.reset = function() {
+              lapTime = startAt = 0;
+            };
+      
+          // Duration
+          this.time = function() {
+              return lapTime + (startAt ? now() - startAt : 0);
+            };
+        };
+      
+      var x = new clsStopwatch();
+      var $time;
+      var clocktimer;
+      
+      function pad(num, size) {
+        var s = "0000" + num;
+        return s.substr(s.length - size);
+      }
+      
+      function formatTime(time) {
+        var h = m = s = ms = 0;
+        var newTime = '';
+      
+        h = Math.floor( time / (60 * 60 * 1000) );
+        time = time % (60 * 60 * 1000);
+        m = Math.floor( time / (60 * 1000) );
+        time = time % (60 * 1000);
+        s = Math.floor( time / 1000 );
+        //ms = time % 1000;
+      
+        newTime = pad(h, 2) + ' : ' + pad(m, 2) + ' : ' + pad(s, 2);// + ':' + pad(ms, 3);
+        document.getElementById("time").innerHTML = newTime;
+        return newTime;
+      }
+      
+      function show() {
+        $time = document.getElementById('time');
+        update();
+      }
+      
+      function update() {
+        $time.innerHTML = formatTime(x.time());
+        document.getElementById("time").innerHTML = $time;
+      }
+      
+      function start() {
+        clocktimer = setInterval("update()", 1);
+      
+        x.start();
+      }
+      
+      function stop() {
+        x.stop();
+        clearInterval(clocktimer);
+      }
+      
+      function reset() {
+        stop();
+        x.reset();
+        //update();
+        document.getElementById("time").innerHTML= "00 : 00 : 00"
+      }
+      </script>
 <!--
   <script type="text/javascript">
   $(document).ready(function() {

@@ -9,11 +9,12 @@ import serial
 from .models import Component_status, Component_data, home, history
 from .serializers import Component_status_Serializer, Status_shifter_Serializer
 from .forms import ComponentStatusForm
+
 try:
     ser = serial.Serial('/dev/ttyACM0',9600,timeout=1)
 except :
     print ('Connection failed!')
-# Create your views here.
+ 
 def home(request):
     return render(request,'el_webI/home.html',{})
 
@@ -44,6 +45,12 @@ def switch_off(request):
 
 def component_control(request):
     return render(request,'el_webI/component_control.html',{})
+
+def history(request):
+    return render(request,'el_webI/history.html',{})
+
+def billpayment(request):
+    return render(request,'el_webI/billpayment.html',{})
 
 # JSON response REST_framework
 # /status

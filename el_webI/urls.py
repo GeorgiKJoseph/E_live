@@ -9,6 +9,8 @@ urlpatterns = [
     path('on/', views.switch_on, name='switch_on'),
     path('off/',views.switch_off,name='switch_off'),
     path('component/',views.component_control,name='component_control'),
+    path('history/',views.history,name='history'),
+    path('billpayment/',views.billpayment,name='billpayment'),
 
     #path('respjson/',views.respjson,name='respjson'),
     url(r'^status/', views.component_status_list.as_view()),

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-# by Govind J Nair
+# bill_prediction by Govind J Nair
 def billcalc(instpow):
     currentDay = datetime.now().day
     currentMonth = datetime.now().month
@@ -60,4 +60,4 @@ def billcalc(instpow):
 
 
 
-billcalc(200)
+billcalc(152)

@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="{% static 'js/stopwatch.js' %}"></script> 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -53,7 +54,7 @@ body {font-size:16px;}
 <nav class="w3-sidebar w3-black w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:300px;font-weight:bold;" id="mySidebar"><br>
   <a href="javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px">eXit</a>
   <div class="w3-container">
-    <h2 class="w3-padding-64" style="font-family: Courier New, Times, serif;"><b>E-live </b></h2>
+    <h2 onclick="window.location.href='/'" class="w3-padding-64" style="font-family: Courier New, Times, serif;"><b>E-live </b></h2>
   </div>
   <div class="w3-bar-block">
     <a href="/history" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">
@@ -76,7 +77,7 @@ body {font-size:16px;}
 <!-- Top menu on small screens -->
 <header class="w3-container w3-top w3-hide-large w3-black w3-xlarge w3-padding">
   <a href="javascript:void(0)" class="w3-button w3-black w3-margin-right" onclick="w3_open()">☰</a>
-  <span style="font-family: Courier New, Times, serif;">E-live</span>
+  <span  onclick="window.location.href='/'" style="font-family: Courier New, Times, serif;">E-live</span>
 </header>
 
 <!-- Overlay effect when opening sidebar on small screens -->
