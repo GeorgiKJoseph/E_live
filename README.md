@@ -17,7 +17,7 @@ The project is still in the developing stage, so some features may won't work:(
 
 * connect audrino to the pc, in ubuntu modify port permission `sudo chmod a+rw /dev/ttyACM0` (/dev/ttyACM0 may be different depends on which port audrino is connected)
 * runserver: `python manage.py runserver 0.0.0.0:8000`
-* take another terminal: 'python digi_phy_interface.py' 
+* take another terminal: `python digi_phy_interface.py` 
 * if you are under a local network (browse : `http://pc_current_ip:8000`) web is currently designed for smartphones.
 
 ## Design & Documentation
