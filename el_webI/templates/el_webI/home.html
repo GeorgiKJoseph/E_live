@@ -1,8 +1,9 @@
 {% extends 'el_webI/base.html' %}
 
+{% load static %}
 {% block content %}
 
-    <br><br><br>
+    <br><br>
     <div class="container">
         <div class="row">
             <div class="col-xs-3">
@@ -29,21 +30,28 @@
     <div class="container">
       <div class="row">
         <div class="col-xs-6">
-          <center><h3 id="current">0.00 A</h3></center>
+          <center><h3 id="current">0.636 A</h3></center>
         </div>
         <div class="col-xs-6">
-          <center><h3 id="inst_watt">0.00 W</h3></center>
+          <center><h3 id="inst_watt">140.02 W</h3></center>
         </div>
       </div>
       <div class="row">
         <div class="col-xs-6">
-          <center><h3 id="consumer_energy">0.00 kWh</h3></center>
+          <center><h3 id="consumer_energy">201.73 kWh</h3></center>
         </div>
         <div class="col-xs-6">
-          <center><h3 id="max_watt">0.00 W</h3></center>
+          <center><h3 id="max_watt">555.01 W</h3></center>
         </div>
       </div>  
     </div>
-    
+    <br>
 </div>
+<div class="container">
+  <h3><strong>Usage Analysis</strong></h3>
+  <center>
+    <img id="myImage" width="350" src="{% static 'images/usage_graph.png' %}" / >
+  </center>
+</div>
+
 {% endblock %}

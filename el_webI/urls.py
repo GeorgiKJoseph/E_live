@@ -11,7 +11,7 @@ urlpatterns = [
     path('component/',views.component_control,name='component_control'),
     path('history/',views.history,name='history'),
     path('billpayment/',views.billpayment,name='billpayment'),
-
+    path('billpredictor/',views.billpredictor,name='billpredictor'),
     #path('respjson/',views.respjson,name='respjson'),
     url(r'^status/', views.component_status_list.as_view()),
     url(r'^statusshifter/', views.status_shifter.as_view()),

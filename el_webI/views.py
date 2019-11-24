@@ -52,6 +52,9 @@ def history(request):
 def billpayment(request):
     return render(request,'el_webI/billpayment.html',{})
 
+def billpredictor(request):
+    return render(request,'el_webI/billpredictor.html',{})
+
 # JSON response REST_framework
 # /status
 class component_status_list(APIView):
