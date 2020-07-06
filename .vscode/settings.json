@@ -1,3 +1,10 @@
 {
-    "python.pythonPath": "env/bin/python3"
+    "python.pythonPath": "env/bin/python3",
+    "cSpell.ignoreWords": [
+        "elive",
+        "folder",
+        "location",
+        "location of elive folder",
+        "of"
+    ]
 }

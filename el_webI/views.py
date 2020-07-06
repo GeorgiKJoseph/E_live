@@ -14,7 +14,7 @@ try:
     ser = serial.Serial('/dev/ttyACM0',9600,timeout=1)
 except :
     print ('Connection failed!')
- 
+
 def home(request):
     return render(request,'el_webI/home.html',{})
 
@@ -63,7 +63,7 @@ class component_status_list(APIView):
         status = Component_status.objects.all()
         serializer = Component_status_Serializer(status, many=True)
         return Response(serializer.data)
-    
+
     def put(self,request):
         comp = get_object_or_404(Component_status,pk=1)
         serializer = Component_status_Serializer(instance=comp,data=request.data)
@@ -93,7 +93,7 @@ class status_shifter(APIView):
                 comp_1.save()
                 ser.write(b'L')
             except:
-                print ('Connection failed!')                   
+                print ('Connection failed!')
 
         return Response(serializer.data)
     def put(self,request):
