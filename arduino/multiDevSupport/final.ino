@@ -1,10 +1,15 @@
 // Using Protothreading
 #include<TimedAction.h>
+// Data exchange using JSON
+#include<ArduinoJson.h>
 // L :- LED  S:- switch  R:- relay
 // relay module is active low
 #define low HIGH
 #define high LOW
 
+// baud rate for Serial port
+#define baud 19200
+//
 // Device 1
 #define Dev1_R 2
 #define Dev1_S 3
@@ -31,13 +36,15 @@ double VRMS = 0;
 double AmpsRMS = 0;
 int mVperAmp = 66;
 
-// function prototype
+// function prototypes
 void switch1Listen();
 void switch2Listen();
 void switch3Listen();
 void switch4Listen();
 void ledControl(int, boolean);
+void deviceStatusUpdate_Ser(int, boolean);
 void getInstantPower();
+void serial_PI_Send(double);
 float getVPP();
 
 // setting Protothreads to Listen to switches
@@ -45,6 +52,7 @@ TimedAction Lis1Thread = TimedAction(100,switch1Listen);
 TimedAction Lis2Thread = TimedAction(100,switch2Listen);
 TimedAction Lis3Thread = TimedAction(100,switch3Listen);
 TimedAction Lis4Thread = TimedAction(100,switch4Listen);
+//
 // setting Protothread to calculate InstantPower in every 5sec
 TimedAction InstanPowThread = TimedAction(1000,getInstantPower);
 
@@ -57,7 +65,7 @@ boolean D4_STATUS = false;
 
 void setup() {
   // baud rate:- 9600 (9600bits per sec)
-  Serial.begin(9600);
+  Serial.begin(baud);
   // Setting pinMode()
   // Device 1
   pinMode(Dev1_R, OUTPUT);
@@ -111,17 +119,15 @@ void switch1Listen() {
   s1 = digitalRead(Dev1_S);
   // Changing state
   if(s1 == false) {
+    // Updating device status
     D1_STATUS ? D1_STATUS = false : D1_STATUS = true;
-    if (D1_STATUS){
-      Serial.write("Device1 ON\n");
-    } else {
-      Serial.write("Device1 OFF\n");
-    }
 
     // Changing led state
     ledControl(Dev1_L,D1_STATUS);
     // Changing relay state
     relayControl(Dev1_R,D1_STATUS);
+    // Updating device status in DB
+    deviceStatusUpdate_Ser(1,D1_STATUS);
 
     // Switch 1 semaphore
     while (s1 == 0)
@@ -136,17 +142,15 @@ void switch2Listen() {
   s2 = digitalRead(Dev2_S);
   // Changing state
   if(s2 == false) {
+    // Updating device status
     D2_STATUS ? D2_STATUS = false : D2_STATUS = true;
-    if (D2_STATUS){
-      Serial.write("Device2 ON\n");
-    } else {
-      Serial.write("Device2 OFF\n");
-    }
 
     // Changing led state
     ledControl(Dev2_L,D2_STATUS);
     // Changing relay state
     relayControl(Dev2_R,D2_STATUS);
+    // Updating device status in DB
+    deviceStatusUpdate_Ser(2,D2_STATUS);
 
     // Switch 2 semaphore
     while (s2 == 0)
@@ -161,17 +165,15 @@ void switch3Listen() {
   s3 = digitalRead(Dev3_S);
   // Changing state
   if(s3 == false) {
+    // Updating device status
     D3_STATUS ? D3_STATUS = false : D3_STATUS = true;
-    if (D3_STATUS){
-      Serial.write("Device3 ON\n");
-    } else {
-      Serial.write("Device4 OFF\n");
-    }
 
     // Changing led state
     ledControl(Dev3_L,D3_STATUS);
     // Changing relay state
     relayControl(Dev3_R,D3_STATUS);
+    // Updating device status in DB
+    deviceStatusUpdate_Ser(3,D3_STATUS);
 
     // Switch 3 semaphore
     while (s3 == 0)
@@ -186,17 +188,15 @@ void switch4Listen() {
   s4 = digitalRead(Dev4_S);
   // Changing state
   if(s4 == false) {
+    // Updating device status
     D4_STATUS ? D4_STATUS = false : D4_STATUS = true;
-    if (D4_STATUS){
-      Serial.write("Device4 ON\n");
-    } else {
-      Serial.write("Device4 OFF\n");
-    }
 
     // Changing led state
     ledControl(Dev4_L,D4_STATUS);
     // Changing relay state
     relayControl(Dev4_R,D4_STATUS);
+    // Updating device status in DB
+    deviceStatusUpdate_Ser(4,D4_STATUS);
 
     // Switch 4 semaphore
     while (s4 == 0)
@@ -204,12 +204,47 @@ void switch4Listen() {
   }
 }
 
+// Update device status via serial port
+// para(switchNo, Device on/off status)
+void deviceStatusUpdate_Ser(int devNo, boolean status){
+  // Allocating JSON Doc, RAM allocated: 200,
+  //
+  // Adding values
+  StaticJsonDocument<200> devicestatus;
+  devicestatus["InfoType"] = "StatusInfo";
+  devicestatus["BoardNo"] = "1";
+  devicestatus["DeviceNo"] = devNo;
+  devicestatus["Status"] = status;
+  //
+  // Generating the minified JSON, sending it to the Serial port
+  // {"Infotype":"StatusInfo","BoardNo":"0","DeviceNo":0,"Status":true}
+  serializeJson(devicestatus, Serial);
+  Serial.println();
+}
+
 // Calculates total power
 void getInstantPower() {
   Voltage = getVPP();
   VRMS = (Voltage/2.0) *0.707;  //root 2 is 0.707
   AmpsRMS = (VRMS * 1000)/mVperAmp;
-  Serial.println(AmpsRMS-0.12);
+  AmpsRMS -= 0.12;
+  serial_PI_Send(AmpsRMS);
+}
+
+// Sending Power_info through serial port using JSON
+void serial_PI_Send(double AmpsRMS) {
+  // Allocating JSON Doc, RAM allocated: 200,
+  //
+  // Adding values
+  StaticJsonDocument<200> powerinfo;
+  powerinfo["InfoType"] = "PowerInfo";
+  powerinfo["BoardNo"] = "1";
+  powerinfo["AmpsRMS"] = AmpsRMS;
+  //
+  // Generating the minified JSON, sending it to the Serial port
+  // {"Infotype":"PowerInfo","BoardNo":"1","AmpsRMS":0.17}
+  serializeJson(powerinfo, Serial);
+  Serial.println();
 }
 
 // Returns voltage
@@ -239,7 +274,5 @@ float getVPP()
 
    // Subtract min from max
    result = ((maxValue - minValue) * 5.0)/1024.0;
-   Serial.print("Raw: ");
-   Serial.println(result);
    return result;
  }
