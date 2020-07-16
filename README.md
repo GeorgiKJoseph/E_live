@@ -25,6 +25,13 @@ The project is still in the developing stage, so some features may won't work:(
 [Documentation (Google Drive)](https://drive.google.com/open?id=1uFiIMQDyL_0s0cy2kcOE5sBEz3lxEvRRTxvR3xHAKI0)
 
 ###### working sample
-
-![image sample off](https://github.com/GeorgiKJoseph/E_live/blob/master/images/working%20sample%20off.jpeg?raw=true)
-![image sample on](https://github.com/GeorgiKJoseph/E_live/blob/master/images/working%20sample%20on.jpeg?raw=true)
+<div>
+  <div style="width: 25%; float:left; margin: 5%;">
+    <img src="https://github.com/GeorgiKJoseph/E_live/blob/redesign/images/working%20sample%20off.jpeg" width="45%">
+ </div>
+ <div style="width: 25%; float:left; margin: 5%;">
+   <img src="https://github.com/GeorgiKJoseph/E_live/blob/redesign/images/working%20sample%20on.jpeg" width="45%">
+ </div>
+ <div>
+   <img src="https://github.com/GeorgiKJoseph/E_live/blob/redesign/images/mulDev.jpg" width="45%">
+ </div>
