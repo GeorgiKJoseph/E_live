@@ -11,3 +11,5 @@ def getBaseDir():
 def getSerialPort():
     return '/dev/ttyACM0'
 
+def getBaud():
+    return 19200

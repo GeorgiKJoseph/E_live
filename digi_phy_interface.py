@@ -73,7 +73,7 @@ if __name__ == "__main__":
     # Connecting to Serial port
     try:
         print("Connecting to " + env.getSerialPort())
-        ser = serial.Serial(env.getSerialPort(),19200,timeout=1)
+        ser = serial.Serial(env.getSerialPort(),env.getBaud(),timeout=1)
         print("Connected")
 
     except:
