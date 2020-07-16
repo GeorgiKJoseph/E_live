@@ -5,7 +5,7 @@ const int sensorIn = A0;
 int d=0;
 int status =0;
 int incomingByte;
-int mVperAmp = 66; 
+int mVperAmp = 66;
 double Voltage = 0;
 double VRMS = 0;
 double AmpsRMS = 0;
@@ -26,7 +26,7 @@ void loop() {
   //Serial.println("C");
   Serial.println(AmpsRMS-0.12);
   //Serial.println(" Amps RMS");
-  
+
   if(Serial.available() > 0){
     incomingByte = Serial.read();
     if(incomingByte == 'H'){
@@ -50,7 +50,7 @@ void loop() {
       Serial.write("O");
     }
     Serial.write("\n");
-    
+
   }
   if (status==1){
     digitalWrite(LEDPin,HIGH);
@@ -69,27 +69,27 @@ float getVPP()
   int readValue,i=0;             //value read from the sensor
   int maxValue = 0;          // store max value here
   int minValue = 1024;          // store min value here
-  
+
    uint32_t start_time = millis();
    //while((millis()-start_time) < 3000) //sample for 3 Sec
    while(i<3000)
    {
        readValue = analogRead(sensorIn);
        // see if you have a new maxValue
-       if (readValue > maxValue) 
+       if (readValue > maxValue)
        {
            /*record the maximum sensor value*/
            maxValue = readValue;
        }
-       if (readValue < minValue) 
+       if (readValue < minValue)
        {
            /*record the minimum sensor value*/
            minValue = readValue;
        }
        i+=1;
    }
-   
+
    // Subtract min from max
-   result = ((maxValue - minValue) * 5.0)/1024.0;   
+   result = ((maxValue - minValue) * 5.0)/1024.0;
    return result;
  }

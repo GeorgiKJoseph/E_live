@@ -54,7 +54,7 @@ TimedAction Lis3Thread = TimedAction(100,switch3Listen);
 TimedAction Lis4Thread = TimedAction(100,switch4Listen);
 //
 // setting Protothread to calculate InstantPower in every 5sec
-TimedAction InstanPowThread = TimedAction(1000,getInstantPower);
+TimedAction InstanPowThread = TimedAction(10000,getInstantPower);
 
 // Device on/off status
 boolean D1_STATUS = false;
@@ -98,6 +98,60 @@ void loop() {
   Lis4Thread.check();
   // Calculate Instant power
   InstanPowThread.check();
+  // Check for input (Serial Port)
+  if(Serial.available() > 0) {
+      serReadTrigger();
+  }
+}
+
+// Reads and perform action
+void serReadTrigger() {
+  //char inpJSON[1024],c;
+  String inpJSON = "";
+  inpJSON = Serial.readString();
+  DynamicJsonDocument doc(1024);
+  deserializeJson(doc, inpJSON);
+  const char* stat = doc["Status"];
+  const char* type = doc["InfoType"];
+  const char dNo = doc["DeviceNo"];
+  int devNo = (int)dNo;
+  int status;
+
+  if(strcmp(stat,"true")) {
+    status = 0;
+  } else {
+    status = 1;
+  }
+  // Assuming as Board 1
+  // Board get updated with device status in DB
+  switch(devNo) {
+    case 1: D1_STATUS = status;
+              // Changing led state
+              ledControl(Dev1_L,D1_STATUS);
+              // Changing relay state
+              relayControl(Dev1_R,D1_STATUS);
+              break;
+    case 2: D2_STATUS = status;
+              // Changing led state
+              ledControl(Dev2_L,D2_STATUS);
+              // Changing relay state
+              relayControl(Dev2_R,D2_STATUS);
+              break;
+    case 3: D3_STATUS = status;
+              // Changing led state
+              ledControl(Dev3_L,D3_STATUS);
+              // Changing relay state
+              relayControl(Dev3_R,D3_STATUS);
+              break;
+    case 4: D4_STATUS = status;
+              // Changing led state
+              ledControl(Dev4_L,D4_STATUS);
+              // Changing relay state
+              relayControl(Dev4_R,D4_STATUS);
+              break;
+    default : Serial.print("Error: ");
+              Serial.print(inpJSON);
+  }
 }
 
 // shift led state paras(pinNo, T/F)
