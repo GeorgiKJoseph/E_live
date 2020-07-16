@@ -6,15 +6,16 @@ from . import views
 
 urlpatterns = [
     path('',views.home,name='home'),
-    path('on/', views.switch_on, name='switch_on'),
-    path('off/',views.switch_off,name='switch_off'),
+    #path('on/', views.switch_on, name='switch_on'),
+    #path('off/',views.switch_off,name='switch_off'),
     path('component/',views.component_control,name='component_control'),
+    path('room/',views.room,name='room'),
     path('history/',views.history,name='history'),
     path('billpayment/',views.billpayment,name='billpayment'),
     path('billpredictor/',views.billpredictor,name='billpredictor'),
     #path('respjson/',views.respjson,name='respjson'),
-    url(r'^status/', views.component_status_list.as_view()),
-    url(r'^statusshifter/', views.status_shifter.as_view()),
+    url(r'^status/(?P<boardNo>\d+)/$', views.component_status_list.as_view()),
+    url(r'^statusshifter/(?P<boardNo>\d+)/(?P<deviceNo>\d+)/$', views.status_shifter.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

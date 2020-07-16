@@ -2,6 +2,8 @@
 *~
 __pycache__
 env
+logs
 db.sqlite3
 plan
 static
+logs/

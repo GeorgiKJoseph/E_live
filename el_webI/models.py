@@ -16,7 +16,7 @@ class Component_data(models.Model):
     boardNo = models.ForeignKey(Board,on_delete=models.CASCADE,default=1)
     name = models.CharField(max_length=40)
     status = models.BooleanField(default=False)
-    current = models.FloatField(default=0.0)
+    #current = models.FloatField(default=0.0)
     watt = models.IntegerField()
     last_update_time = models.DateTimeField(default=timezone.now)
 
