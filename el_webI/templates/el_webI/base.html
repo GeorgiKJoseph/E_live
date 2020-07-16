@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="{% static 'js/stopwatch.js' %}"></script> 
+<script src="{% static 'js/stopwatch.js' %}"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -38,7 +38,7 @@
   from {
     text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 3px #fff, 0 0 4px #fff, 0 0 5px #fff, 0 0 6px #fff, 0 0 7px #fff;
   }
-  
+
   to {
     text-shadow: 0 0 2px #fff, 0 0 3px red, 0 0 4px red, 0 0 5px red, 0 0 6px red, 0 0 7px red, 0 0 8px red;
   }
@@ -58,21 +58,23 @@ body {font-size:16px;}
   </div>
   <div class="w3-bar-block">
     <a href="/history" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">
-      <span class="fa fa-history"></span> &nbsp; &nbsp; History</a> 
+      <span class="fa fa-history"></span> &nbsp; &nbsp; History</a>
     <a onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">
-      <span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;&nbsp;&nbsp;&nbsp; Notification</a> 
+      <span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;&nbsp;&nbsp;&nbsp; Notification</a>
       <a href="/billpredictor" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">
         <i class="fa fa-line-chart"></i>&nbsp;&nbsp;&nbsp; Bill Predictor</a>
     <a href="/billpayment" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">
       <i class="fa fa-cc-paypal"></i>&nbsp;&nbsp;&nbsp; Bill Payment</a>
       <a href="/component" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">
-          <span class="glyphicon glyphicon-th"></span>&nbsp;&nbsp;&nbsp;&nbsp; Component demo</a> 
+          <span class="glyphicon glyphicon-th"></span>&nbsp;&nbsp;&nbsp;&nbsp; Component demo</a>
+      <a href="/room" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">
+          <span class="glyphicon glyphicon-th"></span>&nbsp;&nbsp;&nbsp;&nbsp; Bedroom</a>
     <a onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">
       <span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;&nbsp;&nbsp; Settings </a> 
 
     <a onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">
-      <span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;&nbsp;&nbsp; Log Out</a> 
-   
+      <span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;&nbsp;&nbsp; Log Out</a>
+
   </div>
 </nav>
 
@@ -88,7 +90,7 @@ body {font-size:16px;}
 <div class="w3-container" style="margin-top:80px" id="showcase">
   </div>
 
-  <div class="w3-main" style="margin-left:340px;margin-right:40px"> 
+  <div class="w3-main" style="margin-left:340px;margin-right:40px">
 <div class='container'>
 {% block content %}
 
@@ -101,7 +103,7 @@ function w3_open() {
   document.getElementById("mySidebar").style.display = "block";
   document.getElementById("myOverlay").style.display = "block";
 }
- 
+
 function w3_close() {
   document.getElementById("mySidebar").style.display = "none";
   document.getElementById("myOverlay").style.display = "none";
@@ -119,4 +121,3 @@ function onClick(element) {
 
 </body>
 </html>
-

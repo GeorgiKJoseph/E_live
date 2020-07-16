@@ -26,7 +26,7 @@
     <div class="col-xs-6">
       <center><h3 id="max_watt">45.40 W</h3></center>
     </div>
-  </div>  
+  </div>
 </div>
 
 <!-- SWITCH INPUT FROM WEB -->
@@ -43,7 +43,7 @@
         var request = new XMLHttpRequest();
         var request_link = 'http://';
         request_link= request_link.concat(window.location.host);
-        request_link = request_link.concat('/statusshifter/');
+        request_link = request_link.concat('/statusshifter/1/1');
         request.open('GET',request_link,true);
         request.onload = function() {
             var data = JSON.parse(this.response);
@@ -61,7 +61,7 @@
 </script>
   <script>
     function light_on() {
-      
+
       var image = document.getElementById('myImage');
       image.src = "{% static 'images/pic_bulbon.gif' %}";
     }
@@ -78,7 +78,7 @@
         var request = new XMLHttpRequest();
         var request_link = 'http://';
         request_link= request_link.concat(window.location.host);
-        request_link = request_link.concat('/shift_status/');
+        request_link = request_link.concat('/shift_status/1/1');
         request.open('GET',request_link,true);
         request.send;
     }
@@ -90,12 +90,12 @@
         var request_link = 'http://';
         var watt = 0.0;
         request_link= request_link.concat(window.location.host);
-        request_link = request_link.concat('/status/');
+        request_link = request_link.concat('/status/1/1');
         request.open('GET',request_link,true);
         request.onload = function() {
             var data = JSON.parse(this.response);
             if (request.status >= 200 && request.status < 400) {
-                data.forEach(sta => { 
+                data.forEach(sta => {
                     console.log(sta.cid);
 
                     if (sta.status == true){
@@ -120,7 +120,7 @@
         }
         request.send()
       },1000);
-    } 
+    }
   </script>
 
   <!-- STOPWATCH -->
@@ -129,7 +129,7 @@
           // Private vars
           var	startAt	= 0;	// Time of last start / resume. (0 if not running)
           var	lapTime	= 0;	// Time on the clock when last stopped in milliseconds
-      
+
           var	now	= function() {
               return (new Date()).getTime();
             };
@@ -137,71 +137,71 @@
           this.start = function() {
               startAt	= startAt ? startAt : now();
             };
-      
+
           // Stop or pause
           this.stop = function() {
               // If running, update elapsed time otherwise keep it
               lapTime	= startAt ? lapTime + now() - startAt : lapTime;
               startAt	= 0; // Paused
             };
-      
+
           // Reset
           this.reset = function() {
               lapTime = startAt = 0;
             };
-      
+
           // Duration
           this.time = function() {
               return lapTime + (startAt ? now() - startAt : 0);
             };
         };
-      
+
       var x = new clsStopwatch();
       var $time;
       var clocktimer;
-      
+
       function pad(num, size) {
         var s = "0000" + num;
         return s.substr(s.length - size);
       }
-      
+
       function formatTime(time) {
         var h = m = s = ms = 0;
         var newTime = '';
-      
+
         h = Math.floor( time / (60 * 60 * 1000) );
         time = time % (60 * 60 * 1000);
         m = Math.floor( time / (60 * 1000) );
         time = time % (60 * 1000);
         s = Math.floor( time / 1000 );
         //ms = time % 1000;
-      
+
         newTime = pad(h, 2) + ' : ' + pad(m, 2) + ' : ' + pad(s, 2);// + ':' + pad(ms, 3);
         document.getElementById("time").innerHTML = newTime;
         return newTime;
       }
-      
+
       function show() {
         $time = document.getElementById('time');
         update();
       }
-      
+
       function update() {
         $time.innerHTML = formatTime(x.time());
         document.getElementById("time").innerHTML = $time;
       }
-      
+
       function start() {
         clocktimer = setInterval("update()", 1);
-      
+
         x.start();
       }
-      
+
       function stop() {
         x.stop();
         clearInterval(clocktimer);
       }
-      
+
       function reset() {
         stop();
         x.reset();

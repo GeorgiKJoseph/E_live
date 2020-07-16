@@ -1,0 +1,178 @@
+{% extends 'el_webI/base.html' %}
+{% load static %}
+
+{% block content %}
+<br>
+<div class="container">
+  <div class="col-xs-1">
+  </div>
+  <div class="col-xs-4">
+    <center>
+      <img height="100" width="100" src="{% static 'images/bedroom.png' %}" / >{% csrf_token %}
+    </center>
+  </div>
+  <div class="col-xs-5">
+      <div class="col-xs-8">
+        <center><h3 id="instant-power">0.00</h3></center>
+      </div>
+      <div class="col-xs-4">
+        <center><h3>W</h3></center>
+      </div>
+      <div class="col-xs-8">
+        <center><h3 id="total-power">0.00</h3></center>
+      </div>
+      <div class="col-xs-4">
+        <center><h3>kWh</h3></center>
+      </div>
+  </div>
+  <div class="col-xs-1">
+  </div>
+</div>
+<center><h4><strong>BEDROOM 1</strong></h4></center>
+<hr>
+<h3>Devices</h3>
+<br><br><br>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-6">
+      <center>
+        <img onclick="changeImage(1)" height="50" width="50" src="{% static 'images/bulb.png' %}" />
+      </center>
+    </div>
+    <div class="col-xs-6">
+      <center>
+        <img onclick="changeImage(2)" height="50" width="50" src="{% static 'images/bulb.png' %}" />
+      </center>
+    </div>
+  </div>
+  <div class="col-xs-2">
+  </div>
+  <div class="col-xs-4">
+    <center>
+      <i id="Device1" class="material-icons" style="font-size:15px;color:red;">offline_bolt</i>
+    </center>
+  </div>
+  <div class="col-xs-2">
+  </div>
+  <div class="col-xs-4">
+    <center>
+      <i id="Device2" class="material-icons" style="font-size:15px;color:red;">offline_bolt</i>
+    </center>
+  </div>
+
+  <br><br><br><br>
+  <div class="row">
+    <div class="col-xs-6">
+      <center>
+        <img onclick="changeImage(3)" height="50" width="50" src="{% static 'images/fan.png' %}" />
+      </center>
+    </div>
+    <div class="col-xs-6">
+      <center>
+        <img onclick="changeImage(4)" height="55" width="55" src="{% static 'images/plug.png' %}" />
+      </center>
+    </div>
+  </div>
+  <div class="col-xs-2">
+  </div>
+  <div class="col-xs-4">
+    <center>
+      <i id="Device3" class="material-icons" style="font-size:15px;color:red;">offline_bolt</i>
+    </center>
+  </div>
+  <div class="col-xs-2">
+  </div>
+  <div class="col-xs-4">
+    <center>
+      <i id="Device4" class="material-icons" style="font-size:15px;color:red;">offline_bolt</i>
+    </center>
+  </div>
+</div>
+
+
+
+
+<!-- SWITCH INPUT FROM WEB -->
+<script>
+
+  function changeImage(devNo) {
+    var icon = document.getElementById('Device'+devNo);
+    icon.style.color = "grey"
+    var request = new XMLHttpRequest();
+    var request_link = 'http://';
+    request_link= request_link.concat(window.location.host);
+    request_link = request_link.concat('/statusshifter/1/'+devNo);
+    request.open('GET',request_link,true);
+
+    request.send()
+  }
+</script>
+<script type='text/javascript'>
+  //
+  // initiate process to update board & device status from DB
+  window.onload = function start() {
+    check_status(1);
+  }
+
+  /* Checks status of component in every 1 second */
+  function check_status(boardNo){
+    window.setInterval(function () {
+      var request = new XMLHttpRequest();
+      var request_link = 'http://';
+      request_link= request_link.concat(window.location.host);
+      request_link = request_link.concat('/status/'+boardNo+'/');
+      request.open('GET',request_link,true);
+      request.onload = function() {
+        var data = JSON.parse(this.response);
+        console.log(data);
+        if (request.status >= 200 && request.status < 400) {
+          // Updates Power info
+          if(data.d1Stat || data.d2Stat || data.d3Stat || data.d4Stat){
+            updatePowerStatusWeb(true,data.instantPower,data.totalPower);
+          } else {
+            updatePowerStatusWeb(false,0,0);
+          }
+          // Update device status in Web
+          updateDeviceStatusWeb(data.d1Stat, data.d2Stat, data.d3Stat, data.d4Stat);
+        } else {
+            console.log("error");
+        }
+      }
+      request.send()
+    },1000);
+  }
+  //
+  // Updates total Power-info (in room basis)
+  function updatePowerStatusWeb(boardStatus,instantPower,totalPower) {
+    var watt = 0.0;
+    if (boardStatus){
+      document.getElementById("instant-power").innerHTML = instantPower.toFixed(2);
+      watt = totalPower*220;
+      document.getElementById("total-power").innerHTML = watt.toFixed(2);
+    }
+    else {
+      document.getElementById("instant-power").innerHTML = "0.00";
+      document.getElementById("total-power").innerHTML = "0.00";
+    }
+  }
+  //
+  // Updates device status in web
+  function updateDeviceStatusWeb(d1,d2,d3,d4) {
+    changeState(1,d1);
+    changeState(2,d2);
+    changeState(3,d3);
+    changeState(4,d4);
+  }
+  //
+  // Set ON/OFF status for a specific device (web)
+  function changeState(devNo,status) {
+    if(status){
+      document.getElementById('Device'+devNo).style.color = "green"
+    } else {
+      document.getElementById('Device'+devNo).style.color = "red"
+    }
+  }
+
+</script>
+
+{% endblock %}
